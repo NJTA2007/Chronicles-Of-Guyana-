@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chronicles of Guyana — C.O.G Lore Book</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#000000;--bg:#050503;--surface:#0d0d08;--surface2:#141408;--surface3:#1c1c10;
+  --gold:#FCD116;--gold-dim:#c9a50e;--gold-dark:#7a6308;--gold-glow:rgba(252,209,22,0.15);
+  --green:#009E49;--green-dim:#007a38;--green-glow:rgba(0,158,73,0.15);
+  --red:#CE1126;--red-dim:#a00d1e;--red-glow:rgba(206,17,38,0.15);
+  --white:#FFFFFF;--text:#f0e8d0;--muted:#7a7060;--border:#2a2a18;--border2:#3a3a20;
+}
+body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;font-size:16px;line-height:1.7;min-height:100vh;overflow-x:hidden}
+.bg-layer{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.bg-layer::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(252,209,22,0.06) 0%,transparent 60%)}
+.particle{position:absolute;width:2px;height:2px;border-radius:50%;background:var(--gold);opacity:0;animation:drift linear infinite}
+@keyframes drift{0%{opacity:0;transform:translateY(100vh)}10%{opacity:0.4}90%{opacity:0.1}100%{opacity:0;transform:translateY(-20px) translateX(20px)}}
+#app{position:relative;z-index:1}
+.flag-stripe{height:3px;background:linear-gradient(90deg,var(--green),var(--gold),var(--red))}
+header{text-align:center;padding:2.5rem 1.5rem 2rem;position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
+.header-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(252,209,22,0.08);border:1px solid rgba(252,209,22,0.25);border-radius:2px;padding:4px 14px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.25em;color:var(--gold);margin-bottom:1rem}
+.header-title{font-family:'Cinzel Decorative',serif;font-weight:900;font-size:clamp(1.6rem,4.5vw,3rem);background:linear-gradient(135deg,var(--gold) 0%,#fff8dc 50%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:0.05em;line-height:1.1}
+.header-sub{font-family:'Cinzel',serif;font-size:clamp(0.6rem,1.5vw,0.8rem);letter-spacing:0.35em;color:var(--muted);margin-top:0.4rem}
+.header-rule{display:flex;align-items:center;gap:0.75rem;justify-content:center;margin-top:1rem;opacity:0.4}
+.header-rule span{height:1px;width:80px;background:linear-gradient(90deg,transparent,var(--gold))}
+.header-rule span:last-child{background:linear-gradient(90deg,var(--gold),transparent)}
+.stats-bar{display:flex;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface)}
+.stat-pill{padding:0.6rem 1.5rem;text-align:center;border-right:1px solid var(--border);flex:1;max-width:160px}
+.stat-pill:last-child{border-right:none}
+.stat-num{font-family:'Cinzel',serif;font-size:1.1rem;font-weight:700;color:var(--gold)}
+.stat-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.15em;color:var(--muted);text-transform:uppercase}
+.tab-bar{display:flex;justify-content:center;background:var(--surface);border-bottom:1px solid var(--border);flex-wrap:wrap;position:sticky;top:0;z-index:50;backdrop-filter:blur(10px)}
+.tab{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;padding:0.9rem 1.2rem;cursor:pointer;color:var(--muted);border:none;background:none;position:relative;transition:color 0.2s;display:flex;align-items:center;gap:6px}
+.tab::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;transform:scaleX(0);transition:transform 0.25s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--gold)}
+.tab.active::after{transform:scaleX(1);background:var(--gold)}
+.tab-icon{font-size:12px}
+.main{max-width:1100px;margin:0 auto;padding:2rem 1.25rem}
+.section-title{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:1.25rem;display:flex;align-items:center;gap:1rem}
+.section-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border2),transparent)}
+.toolbar{display:flex;gap:0.75rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center}
+.search-wrap{position:relative;flex:1;min-width:180px;max-width:320px}
+.search-wrap input{width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:3px;color:var(--text);font-family:'Crimson Pro',serif;font-size:14px;padding:0.55rem 0.8rem 0.55rem 2rem;transition:border-color 0.2s}
+.search-wrap input:focus{outline:none;border-color:var(--gold)}
+.search-icon{position:absolute;left:0.6rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:12px;pointer-events:none}
+.entry-count{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.1em;color:var(--muted);margin-left:auto}
+.lore-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px;background:var(--border)}
+.lore-grid-wrap{border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.lore-card{background:var(--surface);cursor:pointer;transition:background 0.2s;position:relative;overflow:hidden}
+.lore-card:hover{background:var(--surface3)}
+.lore-card:hover .card-img-wrap img{transform:scale(1.05)}
+.lore-card:hover .card-arrow{opacity:1;transform:translate(0,0)}
+.card-img-wrap{width:100%;height:160px;overflow:hidden;position:relative;background:var(--surface2)}
+.card-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s ease;display:block}
+.card-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2.5rem;opacity:0.12}
+.card-cat-badge{position:absolute;top:0.6rem;left:0.6rem;font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.12em;padding:2px 8px;border-radius:2px;text-transform:uppercase}
+.badge-characters{background:rgba(206,17,38,0.85);color:#fff}
+.badge-places{background:rgba(0,158,73,0.85);color:#fff}
+.badge-creatures{background:rgba(100,0,180,0.85);color:#fff}
+.badge-factions{background:rgba(252,209,22,0.85);color:#000}
+.card-body{padding:1.1rem 1.25rem}
+.card-name{font-family:'Cinzel',serif;font-size:0.95rem;font-weight:600;color:var(--gold);margin-bottom:0.4rem;line-height:1.3;display:flex;justify-content:space-between;align-items:flex-start}
+.card-arrow{font-size:12px;color:var(--gold);opacity:0;transform:translate(-4px,4px);transition:all 0.2s;flex-shrink:0;margin-left:6px}
+.card-excerpt{font-size:13px;color:var(--muted);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:0.7rem}
+.tag{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.08em;padding:2px 7px;border-radius:2px;border:1px solid var(--border2);color:var(--muted);background:rgba(255,255,255,0.02)}
+.empty-state{text-align:center;padding:4rem 2rem;color:var(--muted);grid-column:1/-1;background:var(--surface)}
+.empty-glyph{font-size:2.5rem;margin-bottom:1rem;opacity:0.2}
+.empty-state p{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.12em;line-height:2}
+.featured-card{display:grid;grid-template-columns:1fr 1.4fr;border:1px solid var(--border2);border-radius:4px;overflow:hidden;margin-bottom:1.5rem;background:var(--surface);cursor:pointer;transition:border-color 0.2s}
+.featured-card:hover{border-color:var(--gold-dark)}
+.featured-img{height:260px;overflow:hidden;position:relative;background:var(--surface2)}
+.featured-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s}
+.featured-card:hover .featured-img img{transform:scale(1.04)}
+.featured-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:5rem;opacity:0.1}
+.featured-body{padding:2rem;display:flex;flex-direction:column;justify-content:center;position:relative}
+.featured-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.25em;color:var(--gold);margin-bottom:0.75rem;text-transform:uppercase}
+.featured-name{font-family:'Cinzel Decorative',serif;font-size:1.4rem;color:var(--gold);line-height:1.2;margin-bottom:0.75rem}
+.featured-excerpt{font-size:14px;color:var(--muted);line-height:1.7;font-style:italic}
+.featured-corner{position:absolute;top:1rem;right:1rem;width:28px;height:28px;border-top:2px solid var(--gold);border-right:2px solid var(--gold);opacity:0.4}
+@media(max-width:600px){.featured-card{grid-template-columns:1fr}.featured-img{height:180px}}
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity 0.25s}
+.modal-backdrop.open{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:4px;max-width:680px;width:100%;max-height:90vh;overflow-y:auto;position:relative;transform:scale(0.96) translateY(16px);transition:transform 0.25s}
+.modal-backdrop.open .modal{transform:scale(1) translateY(0)}
+.modal-hero{width:100%;height:220px;overflow:hidden;position:relative;background:var(--surface2)}
+.modal-hero img{width:100%;height:100%;object-fit:cover;display:block}
+.modal-hero-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:5rem;opacity:0.1}
+.modal-flag-bar{height:3px;background:linear-gradient(90deg,var(--green),var(--gold),var(--red))}
+.modal-content{padding:1.75rem 2rem 2rem}
+.modal-cat{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.4rem}
+.modal-title{font-family:'Cinzel Decorative',serif;font-size:1.7rem;color:var(--gold);line-height:1.2;margin-bottom:1.25rem}
+.modal-divider{height:1px;background:linear-gradient(90deg,var(--gold-dark),transparent);margin:1rem 0;opacity:0.4}
+.modal-lore-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem}
+.modal-lore{font-size:15px;color:var(--text);line-height:1.9;font-style:italic;white-space:pre-wrap}
+.modal-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:1.25rem}
+.modal-close{position:absolute;top:0.75rem;right:0.75rem;background:rgba(0,0,0,0.6);border:1px solid var(--border2);color:var(--muted);width:28px;height:28px;border-radius:2px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;z-index:10;transition:all 0.15s}
+.modal-close:hover{color:var(--text);border-color:var(--gold)}
+.admin-wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:1.5rem;align-items:start}
+@media(max-width:700px){.admin-wrap{grid-template-columns:1fr}}
+.admin-form-box{background:var(--surface);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.admin-form-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border)}
+.admin-form-title{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold)}
+.admin-form-body{padding:1.25rem 1.5rem 1.5rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.75rem}
+.form-row.full{grid-template-columns:1fr;margin-bottom:0.75rem}
+.form-group{display:flex;flex-direction:column;gap:0.35rem}
+label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold)}
+input[type=text],select,textarea{background:var(--bg);border:1px solid var(--border2);border-radius:3px;color:var(--text);font-family:'Crimson Pro',serif;font-size:14px;padding:0.55rem 0.75rem;transition:border-color 0.2s;width:100%;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
+select option{background:var(--surface2)}
+.photo-upload-zone{border:1px dashed var(--border2);border-radius:3px;padding:1.25rem;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;background:var(--bg)}
+.photo-upload-zone:hover{border-color:var(--gold);background:var(--gold-glow)}
+.upload-icon{font-size:1.5rem;margin-bottom:0.3rem;opacity:0.4}
+.upload-text{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase}
+.upload-preview{width:100%;height:100px;object-fit:cover;border-radius:2px;margin-top:0.5rem;display:none}
+.form-actions{display:flex;gap:0.6rem;margin-top:1rem;flex-wrap:wrap}
+.btn-save{background:var(--gold);color:#000;font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.1em;padding:0.6rem 1.4rem;border:none;border-radius:3px;cursor:pointer;font-weight:700;transition:all 0.2s}
+.btn-save:hover{background:#ffe040}
+.btn-cancel{background:transparent;color:var(--muted);font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.1em;padding:0.6rem 1rem;border:1px solid var(--border);border-radius:3px;cursor:pointer;transition:all 0.2s}
+.btn-cancel:hover{color:var(--text);border-color:var(--border2)}
+.admin-list-box{background:var(--surface);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.admin-list-header{padding:0.75rem 1.25rem;border-bottom:1px solid var(--border)}
+.admin-list-title{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted)}
+.admin-item{display:flex;align-items:center;gap:0.75rem;padding:0.7rem 1.25rem;border-bottom:1px solid var(--border);transition:background 0.15s}
+.admin-item:last-child{border-bottom:none}
+.admin-item:hover{background:var(--surface2)}
+.admin-thumb{width:36px;height:36px;border-radius:2px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1rem;overflow:hidden;background:var(--surface2)}
+.admin-thumb img{width:100%;height:100%;object-fit:cover}
+.admin-item-info{flex:1;min-width:0}
+.admin-item-name{font-family:'Cinzel',serif;font-size:0.8rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.admin-item-cat{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.08em;color:var(--muted);margin-top:1px}
+.admin-btns{display:flex;gap:4px;flex-shrink:0}
+.btn-edit,.btn-del{background:none;border:1px solid var(--border);border-radius:2px;padding:2px 8px;font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.06em;cursor:pointer;transition:all 0.15s}
+.btn-edit{color:var(--gold);border-color:rgba(252,209,22,0.25)}
+.btn-edit:hover{background:var(--gold-glow)}
+.btn-del{color:var(--red);border-color:rgba(206,17,38,0.25)}
+.btn-del:hover{background:var(--red-glow)}
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--surface2);border:1px solid var(--gold);border-radius:3px;padding:0.7rem 1.25rem;font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.1em;color:var(--gold);z-index:999;transform:translateY(16px);opacity:0;transition:all 0.3s;pointer-events:none}
+.toast.show{transform:translateY(0);opacity:1}
+.panel{display:none}.panel.active{display:block}
+.cat-characters{color:var(--red)}.cat-places{color:var(--green)}.cat-creatures{color:#a070e0}.cat-factions{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div class="flag-stripe"></div>
+  <div class="bg-layer"><div id="particles"></div></div>
+
+  <header>
+    <div class="header-badge">⚔ Official Lore Archive ⚔</div>
+    <div class="header-title">Chronicles of Guyana</div>
+    <div class="header-sub">C · O · G &nbsp;·&nbsp; THE LIVING LORE BOOK</div>
+    <div class="header-rule"><span></span>✦<span></span></div>
+  </header>
+
+  <div class="stats-bar">
+    <div class="stat-pill"><div class="stat-num" id="stat-char">0</div><div class="stat-label">Characters</div></div>
+    <div class="stat-pill"><div class="stat-num" id="stat-place">0</div><div class="stat-label">Places</div></div>
+    <div class="stat-pill"><div class="stat-num" id="stat-creature">0</div><div class="stat-label">Creatures</div></div>
+    <div class="stat-pill"><div class="stat-num" id="stat-faction">0</div><div class="stat-label">Factions</div></div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab active" onclick="switchTab('characters')"><span class="tab-icon">⚔</span>Characters</button>
+    <button class="tab" onclick="switchTab('places')"><span class="tab-icon">🗺</span>Places</button>
+    <button class="tab" onclick="switchTab('creatures')"><span class="tab-icon">🐉</span>Creatures</button>
+    <button class="tab" onclick="switchTab('factions')"><span class="tab-icon">⚑</span>Factions</button>
+    <button class="tab" onclick="switchTab('admin')"><span class="tab-icon">✦</span>Scribe's Desk</button>
+  </div>
+
+  <div class="main">
+    <div id="panel-characters" class="panel active">
+      <div class="section-title">Known Characters</div>
+      <div class="toolbar">
+        <div class="search-wrap"><span class="search-icon">⌕</span><input type="text" placeholder="Search characters..." oninput="filterCards('characters',this.value)"></div>
+        <span class="entry-count" id="count-characters"></span>
+      </div>
+      <div id="featured-characters"></div>
+      <div class="lore-grid-wrap"><div class="lore-grid" id="grid-characters"></div></div>
+    </div>
+
+    <div id="panel-places" class="panel">
+      <div class="section-title">Lands & Locations</div>
+      <div class="toolbar">
+        <div class="search-wrap"><span class="search-icon">⌕</span><input type="text" placeholder="Search places..." oninput="filterCards('places',this.value)"></div>
+        <span class="entry-count" id="count-places"></span>
+      </div>
+      <div id="featured-places"></div>
+      <div class="lore-grid-wrap"><div class="lore-grid" id="grid-places"></div></div>
+    </div>
+
+    <div id="panel-creatures" class="panel">
+      <div class="section-title">Beasts & Creatures</div>
+      <div class="toolbar">
+        <div class="search-wrap"><span class="search-icon">⌕</span><input type="text" placeholder="Search creatures..." oninput="filterCards('creatures',this.value)"></div>
+        <span class="entry-count" id="count-creatures"></span>
+      </div>
+      <div id="featured-creatures"></div>
+      <div class="lore-grid-wrap"><div class="lore-grid" id="grid-creatures"></div></div>
+    </div>
+
+    <div id="panel-factions" class="panel">
+      <div class="section-title">Factions & Orders</div>
+      <div class="toolbar">
+        <div class="search-wrap"><span class="search-icon">⌕</span><input type="text" placeholder="Search factions..." oninput="filterCards('factions',this.value)"></div>
+        <span class="entry-count" id="count-factions"></span>
+      </div>
+      <div id="featured-factions"></div>
+      <div class="lore-grid-wrap"><div class="lore-grid" id="grid-factions"></div></div>
+    </div>
+
+    <div id="panel-admin" class="panel">
+      <div class="admin-wrap">
+        <div class="admin-form-box">
+          <div class="admin-form-header">
+            <div class="admin-form-title" id="form-title">✦ Add New Lore Entry</div>
+          </div>
+          <div class="admin-form-body">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Category</label>
+                <select id="f-category">
+                  <option value="characters">Character</option>
+                  <option value="places">Place / Location</option>
+                  <option value="creatures">Creature / Beast</option>
+                  <option value="factions">Faction / Group</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Name</label>
+                <input type="text" id="f-name" placeholder="e.g. Elder Kofi">
+              </div>
+            </div>
+            <div class="form-row full">
+              <div class="form-group">
+                <label>Photo / Image</label>
+                <div class="photo-upload-zone" id="upload-zone" onclick="document.getElementById('f-photo-file').click()">
+                  <input type="file" id="f-photo-file" accept="image/*" style="display:none" onchange="handlePhotoUpload(this)">
+                  <div class="upload-icon">📷</div>
+                  <div class="upload-text">Click to upload image</div>
+                  <img id="upload-preview" class="upload-preview" alt="preview">
+                </div>
+              </div>
+            </div>
+            <div class="form-row full">
+              <div class="form-group">
+                <label>Short Description</label>
+                <input type="text" id="f-excerpt" placeholder="A brief description...">
+              </div>
+            </div>
+            <div class="form-row full">
+              <div class="form-group">
+                <label>Full Lore Entry</label>
+                <textarea id="f-lore" rows="5" placeholder="The full story, history, abilities..."></textarea>
+              </div>
+            </div>
+            <div class="form-row full">
+              <div class="form-group">
+                <label>Tags (comma separated)</label>
+                <input type="text" id="f-tags" placeholder="e.g. warrior, Demerara, ancient">
+              </div>
+            </div>
+            <div class="form-row full">
+              <div class="form-group">
+                <label>Featured Entry?</label>
+                <select id="f-featured">
+                  <option value="0">No</option>
+                  <option value="1">Yes — Feature this entry</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn-save" onclick="saveEntry()">⚔ Save to Chronicles</button>
+              <button class="btn-cancel" onclick="cancelEdit()" id="btn-cancel" style="display:none">Cancel Edit</button>
+            </div>
+          </div>
+        </div>
+        <div class="admin-list-box">
+          <div class="admin-list-header"><div class="admin-list-title">All Entries</div></div>
+          <div id="admin-list-items"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modal" onclick="closeIfBackdrop(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-hero" id="modal-hero">
+      <div class="modal-hero-placeholder" id="modal-hero-ph"></div>
+    </div>
+    <div class="modal-flag-bar"></div>
+    <div class="modal-content">
+      <div class="modal-cat" id="modal-cat"></div>
+      <div class="modal-title" id="modal-title"></div>
+      <div class="modal-divider"></div>
+      <div class="modal-lore-label">Lore</div>
+      <div class="modal-lore" id="modal-lore"></div>
+      <div class="modal-tags" id="modal-tags"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const GOLD='#FCD116',GREEN='#009E49',RED='#CE1126';
+const CAT={
+  characters:{label:'Character',color:RED,icon:'⚔',ph:'👤'},
+  places:{label:'Place',color:GREEN,icon:'🗺',ph:'🏔'},
+  creatures:{label:'Creature',color:'#a070e0',icon:'🐉',ph:'🐲'},
+  factions:{label:'Faction',color:GOLD,icon:'⚑',ph:'⚑'},
+};
+const STORAGE_KEY='cog_lorebook_v3';
+let data={characters:[],places:[],creatures:[],factions:[]};
+let editingId=null;
+let currentPhotoData=null;
+
+// Particles
+(function(){
+  const c=document.getElementById('particles');
+  for(let i=0;i<18;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    p.style.cssText=`left:${Math.random()*100}%;animation-duration:${8+Math.random()*12}s;animation-delay:${Math.random()*10}s;`;
+    c.appendChild(p);
+  }
+})();
+
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
+
+function loadData(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(raw) data=JSON.parse(raw);
+    else { data={characters:[],places:[],creatures:[],factions:[]}; seedSamples(); }
+  }catch(e){ data={characters:[],places:[],creatures:[],factions:[]}; seedSamples(); }
+  renderAll();
+}
+
+function persist(){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(data));}catch(e){} }
+
+function seedSamples(){
+  data.characters.push({id:uid(),name:'Nathan',excerpt:'Guyanese-born, Canadian-raised. The reluctant bridge between two worlds.',lore:'Born in Guyana but raised in Canada from infancy, Nathan has always felt caught between two identities. His first conscious return to his homeland changed everything — a chance encounter in an old bookshop set in motion events that would pull him and his friends deep into the past. Quiet, analytical, and fiercely loyal, Nathan carries the weight of his heritage without yet understanding its full power.',tags:['protagonist','Guyanese','Canada','time traveller'],photo:'',featured:1});
+  data.places.push({id:uid(),name:'The Old Bookshop',excerpt:'A mysterious Georgetown shop whose owner seems to know far more than she reveals.',lore:'Tucked away on a quiet Georgetown street, this weathered bookshop appears unremarkable from the outside. Inside, shelves stretch impossibly high and the air smells of old parchment and something ancient. The elderly owner gifted Nathan a sealed book that would change four lives forever. Whether by fate or design, no one has been able to find the shop since.',tags:['Georgetown','mysterious','origin','the book'],photo:'',featured:0});
+  data.creatures.push({id:uid(),name:'The Caimanbek',excerpt:'A colossal river creature — half caiman, half something far older.',lore:'Feared across every river settlement in the Chronicles. It walks upright on land, moves like water when submerged, and leaves no tracks. Elders say it was not born — it was left behind by an age that no longer exists. No weapon forged in the present has ever drawn its blood. Only silence is said to keep it at bay.',tags:['beast','river','ancient','unkillable'],photo:'',featured:0});
+  data.factions.push({id:uid(),name:'The Ironwood Order',excerpt:'A secretive brotherhood sworn to protect the sacred groves of the interior.',lore:'Founded three centuries ago by seven warriors who survived the Burning of Essequibo, the Ironwood Order operates entirely from the deep jungle. They have no banner, no fortress — only a calling. Members are identified by a carving of a black tree on the inside of the wrist. They answer to no crown — only to the land itself.',tags:['secret society','protectors','jungle','ancient oath'],photo:'',featured:0});
+}
+
+function renderAll(){
+  ['characters','places','creatures','factions'].forEach(renderSection);
+  renderAdminList();
+  updateStats();
+}
+
+function updateStats(){
+  document.getElementById('stat-char').textContent=data.characters.length;
+  document.getElementById('stat-place').textContent=data.places.length;
+  document.getElementById('stat-creature').textContent=data.creatures.length;
+  document.getElementById('stat-faction').textContent=data.factions.length;
+}
+
+function renderSection(cat){
+  const input=document.querySelector(`#panel-${cat} .search-wrap input`);
+  const q=input?input.value.toLowerCase():'';
+  const items=(data[cat]||[]).filter(e=>!q||e.name.toLowerCase().includes(q)||e.excerpt.toLowerCase().includes(q)||(e.tags||[]).some(t=>t.toLowerCase().includes(q)));
+  document.getElementById('count-'+cat).textContent=items.length+(items.length===1?' entry':' entries');
+  const feat=items.find(e=>e.featured==1);
+  const featEl=document.getElementById('featured-'+cat);
+  if(feat){
+    featEl.innerHTML=`<div class="featured-card" onclick="openModal('${cat}','${feat.id}')">
+      <div class="featured-img">${feat.photo?`<img src="${feat.photo}" alt="${feat.name}">`:`<div class="featured-img-placeholder">${CAT[cat].ph}</div>`}</div>
+      <div class="featured-body">
+        <div class="featured-corner"></div>
+        <div class="featured-label">⭐ Featured ${CAT[cat].label}</div>
+        <div class="featured-name">${feat.name}</div>
+        <div class="featured-excerpt">${feat.excerpt}</div>
+        <div class="card-tags" style="margin-top:1rem">${(feat.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+      </div></div>`;
+  } else { featEl.innerHTML=''; }
+  const gridItems=items.filter(e=>!feat||e.id!==feat.id);
+  const grid=document.getElementById('grid-'+cat);
+  if(!gridItems.length&&!feat){
+    grid.innerHTML=`<div class="empty-state"><div class="empty-glyph">${CAT[cat].icon}</div><p>No ${cat} chronicled yet.<br>Head to the Scribe's Desk to add your first entry.</p></div>`;
+    return;
+  }
+  grid.innerHTML=gridItems.map(e=>`
+    <div class="lore-card" onclick="openModal('${cat}','${e.id}')">
+      <div class="card-img-wrap">
+        ${e.photo?`<img src="${e.photo}" alt="${e.name}">`:`<div class="card-img-placeholder">${CAT[cat].ph}</div>`}
+        <span class="card-cat-badge badge-${cat}">${CAT[cat].label}</span>
+      </div>
+      <div class="card-body">
+        <div class="card-name">${e.name}<span class="card-arrow">↗</span></div>
+        <div class="card-excerpt">${e.excerpt}</div>
+        ${(e.tags||[]).length?`<div class="card-tags">${e.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>`:''}
+      </div>
+    </div>`).join('');
+}
+
+function filterCards(cat){ renderSection(cat); }
+
+function openModal(cat,id){
+  const e=(data[cat]||[]).find(x=>x.id===id);
+  if(!e) return;
+  const m=CAT[cat];
+  const hero=document.getElementById('modal-hero');
+  const ph=document.getElementById('modal-hero-ph');
+  const oldImg=hero.querySelector('img');
+  if(oldImg) oldImg.remove();
+  if(e.photo){
+    const img=document.createElement('img');
+    img.src=e.photo; img.alt=e.name;
+    hero.insertBefore(img,ph);
+    ph.style.display='none';
+    hero.style.display='block';
+  } else {
+    ph.style.display='flex'; ph.textContent=m.ph;
+    hero.style.display='flex'; hero.style.alignItems='center'; hero.style.justifyContent='center';
+  }
+  document.getElementById('modal-cat').style.color=m.color;
+  document.getElementById('modal-cat').textContent=m.label.toUpperCase();
+  document.getElementById('modal-title').textContent=e.name;
+  document.getElementById('modal-lore').textContent=e.lore||e.excerpt;
+  document.getElementById('modal-tags').innerHTML=(e.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('');
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeModal(){ document.getElementById('modal').classList.remove('open'); document.body.style.overflow=''; }
+function closeIfBackdrop(ev){ if(ev.target===document.getElementById('modal')) closeModal(); }
+
+function handlePhotoUpload(input){
+  const file=input.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    currentPhotoData=e.target.result;
+    const preview=document.getElementById('upload-preview');
+    preview.src=currentPhotoData; preview.style.display='block';
+    document.querySelector('.upload-icon').style.display='none';
+    document.querySelector('.upload-text').textContent='Image loaded ✓';
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveEntry(){
+  const cat=document.getElementById('f-category').value;
+  const name=document.getElementById('f-name').value.trim();
+  const excerpt=document.getElementById('f-excerpt').value.trim();
+  const lore=document.getElementById('f-lore').value.trim();
+  const tagsRaw=document.getElementById('f-tags').value.trim();
+  const featured=parseInt(document.getElementById('f-featured').value)||0;
+  if(!name||!excerpt){showToast('Name and description are required.');return;}
+  const tags=tagsRaw?tagsRaw.split(',').map(t=>t.trim()).filter(Boolean):[];
+  const photo=currentPhotoData||'';
+  if(editingId){
+    ['characters','places','creatures','factions'].forEach(c=>{
+      const i=(data[c]||[]).findIndex(x=>x.id===editingId);
+      if(i>=0) data[c].splice(i,1);
+    });
+    data[cat]=data[cat]||[];
+    data[cat].push({id:editingId,name,excerpt,lore,tags,photo,featured});
+    editingId=null;
+    document.getElementById('btn-cancel').style.display='none';
+    document.getElementById('form-title').textContent='✦ Add New Lore Entry';
+    showToast('Entry updated in the Chronicles.');
+  } else {
+    data[cat].push({id:uid(),name,excerpt,lore,tags,photo,featured});
+    showToast('Entry added to the Chronicles.');
+  }
+  clearForm(); persist(); renderAll();
+}
+
+function cancelEdit(){
+  editingId=null;
+  document.getElementById('btn-cancel').style.display='none';
+  document.getElementById('form-title').textContent='✦ Add New Lore Entry';
+  clearForm();
+}
+
+function clearForm(){
+  ['f-name','f-excerpt','f-lore','f-tags'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-category').value='characters';
+  document.getElementById('f-featured').value='0';
+  currentPhotoData=null;
+  document.getElementById('upload-preview').style.display='none';
+  document.querySelector('.upload-icon').style.display='block';
+  document.querySelector('.upload-text').textContent='Click to upload image';
+  document.getElementById('f-photo-file').value='';
+}
+
+function editEntry(cat,id){
+  const e=(data[cat]||[]).find(x=>x.id===id);
+  if(!e) return;
+  switchTab('admin');
+  editingId=id; currentPhotoData=e.photo||null;
+  document.getElementById('f-category').value=cat;
+  document.getElementById('f-name').value=e.name;
+  document.getElementById('f-excerpt').value=e.excerpt;
+  document.getElementById('f-lore').value=e.lore||'';
+  document.getElementById('f-tags').value=(e.tags||[]).join(', ');
+  document.getElementById('f-featured').value=e.featured?'1':'0';
+  if(e.photo){
+    const p=document.getElementById('upload-preview');
+    p.src=e.photo; p.style.display='block';
+    document.querySelector('.upload-icon').style.display='none';
+    document.querySelector('.upload-text').textContent='Image loaded ✓';
+  }
+  document.getElementById('btn-cancel').style.display='inline-block';
+  document.getElementById('form-title').textContent='✦ Edit Entry';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function deleteEntry(cat,id){
+  if(!confirm('Remove this entry from the Chronicles?')) return;
+  data[cat]=(data[cat]||[]).filter(x=>x.id!==id);
+  persist(); renderAll(); showToast('Entry removed.');
+}
+
+function renderAdminList(){
+  const c=document.getElementById('admin-list-items');
+  const all=[];
+  ['characters','places','creatures','factions'].forEach(cat=>(data[cat]||[]).forEach(e=>all.push({...e,cat})));
+  if(!all.length){c.innerHTML='<div style="padding:1.5rem;text-align:center;font-family:Cinzel,serif;font-size:9px;letter-spacing:0.1em;color:var(--muted)">No entries yet</div>';return;}
+  c.innerHTML=all.map(e=>`
+    <div class="admin-item">
+      <div class="admin-thumb">${e.photo?`<img src="${e.photo}" alt="">`:`<span style="opacity:0.3">${CAT[e.cat].ph}</span>`}</div>
+      <div class="admin-item-info">
+        <div class="admin-item-name">${e.name}</div>
+        <div class="admin-item-cat cat-${e.cat}">${CAT[e.cat].label}${e.featured==1?' · ⭐':''}</div>
+      </div>
+      <div class="admin-btns">
+        <button class="btn-edit" onclick="editEntry('${e.cat}','${e.id}')">Edit</button>
+        <button class="btn-del" onclick="deleteEntry('${e.cat}','${e.id}')">Del</button>
+      </div>
+    </div>`).join('');
+}
+
+function switchTab(tab){
+  const tabs=['characters','places','creatures','factions','admin'];
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',tabs[i]===tab));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// Keyboard close modal
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
+
+loadData();
+</script>
+</body>
+</html>
